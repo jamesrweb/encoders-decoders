@@ -6,7 +6,6 @@ import Html
 import Html.Attributes exposing (class, href, rel)
 import Http
 import Models.Users as Users exposing (Users)
-import Utils.Html exposing (viewJust)
 
 
 type alias Flags =
@@ -23,14 +22,15 @@ main =
         }
 
 
-type alias Model =
-    { users : Maybe Users
-    }
+type Model
+    = Loading
+    | Loaded Users
+    | Failed
 
 
 init : Flags -> ( Model, Cmd Message )
 init _ =
-    ( Model Nothing, Users.get GotUsers )
+    ( Loading, Users.get GotUsers )
 
 
 type Message
@@ -38,13 +38,13 @@ type Message
 
 
 update : Message -> Model -> ( Model, Cmd Message )
-update message model =
+update message _ =
     case message of
         GotUsers (Ok users) ->
-            ( { model | users = Just users }, Cmd.none )
+            ( Loaded users, Cmd.none )
 
         GotUsers (Err _) ->
-            ( model, Cmd.none )
+            ( Failed, Cmd.none )
 
 
 subscriptions : Model -> Sub Message
@@ -57,8 +57,16 @@ view model =
     { title = "Users"
     , body =
         [ Html.node "link" [ href "https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css", rel "stylesheet" ] []
-        , Html.div [ class "container p-4" ]
-            [ viewJust (\users -> Users.view users) model.users
-            ]
+        , case model of
+            Loading ->
+                Html.p [] [ Html.text "Loading..." ]
+
+            Loaded users ->
+                Html.div [ class "container p-4" ]
+                    [ Users.view users
+                    ]
+
+            Failed ->
+                Html.p [] [ Html.text "Failed to load users..." ]
         ]
     }
