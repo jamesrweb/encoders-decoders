@@ -1,7 +1,6 @@
-module Models.Sex exposing (Sex(..), decoder, toPronoun, toString)
+module Models.Sex exposing (Sex(..), decoder, toString)
 
 import Json.Decode as D exposing (Decoder)
-import Models.Pronoun exposing (Pronoun(..))
 
 
 type Sex
@@ -26,16 +25,6 @@ fromString sex =
 
     else
         Female
-
-
-toPronoun : Sex -> Pronoun
-toPronoun sex =
-    case sex of
-        Male ->
-            He
-
-        Female ->
-            She
 
 
 decoder : Decoder Sex

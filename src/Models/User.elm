@@ -9,7 +9,6 @@ import Models.Age as Age exposing (Age)
 import Models.Image as Image exposing (Image)
 import Models.Name as Name exposing (Name)
 import Models.Nationality as Nationality exposing (Nationality)
-import Models.Pronoun as Pronoun
 import Models.Sex as Sex exposing (Sex)
 import Models.Username as Username exposing (Username)
 import Url
@@ -75,9 +74,6 @@ view (User user) =
                             |> userOverviewListItem "Nationality:"
                         , Sex.toString user.sex
                             |> userOverviewListItem "Sex:"
-                        , Sex.toPronoun user.sex
-                            |> Pronoun.toPronouns
-                            |> userOverviewListItem "Pronouns:"
                         ]
                     ]
                 ]
